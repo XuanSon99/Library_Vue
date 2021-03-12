@@ -21,7 +21,7 @@
       <v-list-item>
         <v-list-item-avatar class="align-self-center" color="white" contain>
           <v-img
-            src="https://scontent.fhan5-4.fna.fbcdn.net/v/t1.0-9/138664195_995689677623685_8458436879697728724_n.jpg?_nc_cat=104&ccb=3&_nc_sid=09cbfe&_nc_ohc=ahdJZnrnOIcAX97zZ7Z&_nc_ht=scontent.fhan5-4.fna&oh=9f9ea9644fc5c3ef11493dd57ce924da&oe=6056208D"
+            src="https://scontent.fhph1-1.fna.fbcdn.net/v/t1.0-1/p200x200/119177624_2510064932634095_6895327298751161307_n.jpg?_nc_cat=104&ccb=3&_nc_sid=7206a8&_nc_ohc=dpQe1o1aD1sAX8RvfTp&_nc_ht=scontent.fhph1-1.fna&tp=6&oh=68f9c0300b1ee6eed69a2b1bac75cdfc&oe=6066F1EB"
           />
         </v-list-item-avatar>
 
@@ -115,39 +115,39 @@ export default {
       //   to: '/components/notifications',
       // },
       {
-        title: "Tài liệu",
+        title: "Kết quả học tập",
         icon: "mdi-book-open-page-variant",
-        to: "/documents",
+        to: "/scores",
       },
       {
-        title: "Tác giả",
+        title: "Giáo viên",
         icon: "mdi-account-circle",
-        to: "/authors",
+        to: "/teachers",
       },
       {
-        title: "Xuất bản",
+        title: "Học sinh",
         icon: "mdi-shield-home",
-        to: "/publishers",
+        to: "/students",
       },
       {
-        title: "Ngôn ngữ",
-        icon: "mdi-translate",
-        to: "/languages",
-      },
-      {
-        title: "Lĩnh vực",
-        icon: "mdi-bookshelf",
-        to: "/fields",
-      },
-      {
-        title: "Độc giả",
+        title: "Lớp học",
         icon: "mdi-account-heart",
-        to: "/readers",
+        to: "/classrooms",
       },
       {
-        title: "Phiếu mượn",
+        title: "Môn học",
+        icon: "mdi-translate",
+        to: "/subjects",
+      },
+      {
+        title: "Khối",
+        icon: "mdi-bookshelf",
+        to: "/grade-level",
+      },
+      {
+        title: "Loại điểm",
         icon: "mdi-book-account",
-        to: "/bills",
+        to: "/type-mark",
       },
       {
         title: "Tài khoản",

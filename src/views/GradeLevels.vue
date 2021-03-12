@@ -3,8 +3,8 @@
     <base-material-card
       color="success"
       dark
-      icon="mdi-shield-home"
-      title="Nhà xuất bản"
+      icon="mdi-translate"
+      title="Khối"
       class="px-5 py-3"
     >
       <!-- update: sort-desc -->
@@ -45,13 +45,7 @@
                   <v-container>
                     <v-row>
                       <v-col cols="12">
-                        <v-text-field
-                          v-model="editedItem.name"
-                          label="Nhà xuất bản"
-                        />
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field v-model="editedItem.note" label="Mô tả" />
+                        <v-text-field v-model="editedItem.name" label="Khối" />
                       </v-col>
                     </v-row>
                     <v-alert type="warning" dense border="left" v-if="error">
@@ -105,24 +99,21 @@ export default {
     dialogDelete: false,
     headers: [
       {
-        text: "Nhà xuất bản",
+        text: "Khối",
         align: "start",
         sortable: false,
         value: "name",
       },
-      { text: "Mã nhà xuất bản", value: "id" },
-      { text: "Mô tả", value: "note" },
+      { text: "Mã khối", value: "id" },
       { text: "Hành động", value: "actions", sortable: false },
     ],
     desserts: [],
     editedIndex: -1,
     editedItem: {
       name: "",
-      note: "",
     },
     defaultItem: {
       name: "",
-      note: "",
     },
     show: false,
     error: "",
@@ -150,7 +141,7 @@ export default {
   methods: {
     getList() {
       this.desserts = [];
-      this.CallAPI("get", "publishers", {}, (response) => {
+      this.CallAPI("get", "grade-level", {}, (response) => {
         this.desserts = response.data;
       });
     },
@@ -175,7 +166,7 @@ export default {
       this.closeDelete();
       this.CallAPI(
         "delete",
-        "publishers/" + this.desserts[this.editedIndex].id,
+        "grade-level/" + this.desserts[this.editedIndex].id,
         {},
         (response) => {
           this.$toast.success("Xóa thành công");
@@ -206,17 +197,14 @@ export default {
     },
 
     save() {
-      if (
-        !this.editedItem.name ||
-        !this.editedItem.note
-      ) {
+      if (!this.editedItem.name) {
         this.error = "Vui lòng nhập đủ thông tin";
         return;
       }
       if (this.editedIndex > -1) {
         this.CallAPI(
           "put",
-          "publishers/" + this.desserts[this.editedIndex].id,
+          "grade-level/" + this.desserts[this.editedIndex].id,
           this.editedItem,
           (response) => {
             this.$toast.success("Sửa thành công");
@@ -224,13 +212,13 @@ export default {
             this.close();
           },
           (error) => {
-            this.error = "Mã nhà xuất bản đã tồn tại";
+            this.error = "Mã ngôn ngữ đã tồn tại";
           }
         );
       } else {
         this.CallAPI(
           "post",
-          "publishers",
+          "grade-level",
           this.editedItem,
           (response) => {
             this.$toast.success("Thêm thành công");
@@ -238,7 +226,7 @@ export default {
             this.close();
           },
           (error) => {
-            this.error = "Mã nhà xuất bản đã tồn tại";
+            this.error = "Mã ngôn ngữ đã tồn tại";
           }
         );
       }

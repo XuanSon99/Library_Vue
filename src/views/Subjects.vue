@@ -3,8 +3,8 @@
     <base-material-card
       color="success"
       dark
-      icon="mdi-bookshelf"
-      title="Lĩnh vực"
+      icon="mdi-shield-home"
+      title="Môn học"
       class="px-5 py-3"
     >
       <!-- update: sort-desc -->
@@ -47,11 +47,11 @@
                       <v-col cols="12">
                         <v-text-field
                           v-model="editedItem.name"
-                          label="Lĩnh vực"
+                          label="Môn học"
                         />
                       </v-col>
                       <v-col cols="12">
-                        <v-text-field v-model="editedItem.note" label="Mô tả" />
+                        <v-text-field v-model="editedItem.description" label="Mô tả" />
                       </v-col>
                     </v-row>
                     <v-alert type="warning" dense border="left" v-if="error">
@@ -105,24 +105,24 @@ export default {
     dialogDelete: false,
     headers: [
       {
-        text: "Lĩnh vực",
+        text: "Môn học",
         align: "start",
         sortable: false,
         value: "name",
       },
-      { text: "Mã lĩnh vực", value: "id" },
-      { text: "Mô tả", value: "note" },
+      { text: "Mã môn", value: "id" },
+      { text: "Mô tả", value: "description" },
       { text: "Hành động", value: "actions", sortable: false },
     ],
     desserts: [],
     editedIndex: -1,
     editedItem: {
       name: "",
-      note: "",
+      description: "",
     },
     defaultItem: {
       name: "",
-      note: "",
+      description: "",
     },
     show: false,
     error: "",
@@ -150,7 +150,7 @@ export default {
   methods: {
     getList() {
       this.desserts = [];
-      this.CallAPI("get", "fields", {}, (response) => {
+      this.CallAPI("get", "subjects", {}, (response) => {
         this.desserts = response.data;
       });
     },
@@ -175,7 +175,7 @@ export default {
       this.closeDelete();
       this.CallAPI(
         "delete",
-        "fields/" + this.desserts[this.editedIndex].id,
+        "subjects/" + this.desserts[this.editedIndex].id,
         {},
         (response) => {
           this.$toast.success("Xóa thành công");
@@ -208,7 +208,7 @@ export default {
     save() {
       if (
         !this.editedItem.name ||
-        !this.editedItem.note
+        !this.editedItem.description
       ) {
         this.error = "Vui lòng nhập đủ thông tin";
         return;
@@ -216,7 +216,7 @@ export default {
       if (this.editedIndex > -1) {
         this.CallAPI(
           "put",
-          "fields/" + this.desserts[this.editedIndex].id,
+          "subjects/" + this.desserts[this.editedIndex].id,
           this.editedItem,
           (response) => {
             this.$toast.success("Sửa thành công");
@@ -224,13 +224,13 @@ export default {
             this.close();
           },
           (error) => {
-            this.error = "Mã lĩnh vực đã tồn tại";
+            this.error = "Mã nhà xuất bản đã tồn tại";
           }
         );
       } else {
         this.CallAPI(
           "post",
-          "fields",
+          "subjects",
           this.editedItem,
           (response) => {
             this.$toast.success("Thêm thành công");
@@ -238,7 +238,7 @@ export default {
             this.close();
           },
           (error) => {
-            this.error = "Mã lĩnh vực đã tồn tại";
+            this.error = "Mã nhà xuất bản đã tồn tại";
           }
         );
       }

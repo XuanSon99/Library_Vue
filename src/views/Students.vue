@@ -3,8 +3,8 @@
     <base-material-card
       color="success"
       dark
-      icon="mdi-bookmark-plus"
-      title="Tài liệu"
+      icon="mdi-account-heart-outline"
+      title="Sinh viên"
       class="px-5 py-3"
     >
       <!-- update: sort-desc -->
@@ -45,84 +45,42 @@
                   <v-container>
                     <v-row>
                       <v-col cols="12">
-                        <v-text-field v-model="editedItem.name" label="Tên" />
-                      </v-col>
-                      <v-col cols="12">
-                        <v-select
-                          :items="authorList"
-                          v-model="editedItem.author"
-                          label="Tác giả"
-                          item-text="name"
-                          item-value="id"
-                          return-object
-                        ></v-select>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-select
-                          :items="publisherList"
-                          v-model="editedItem.publisher"
-                          label="Nhà xuất bản"
-                          item-text="name"
-                          item-value="id"
-                          return-object
-                        ></v-select>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-select
-                          :items="languageList"
-                          v-model="editedItem.language"
-                          label="Ngôn ngữ"
-                          item-text="name"
-                          item-value="id"
-                          return-object
-                        ></v-select>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-select
-                          :items="fieldList"
-                          v-model="editedItem.field"
-                          label="Lĩnh vực"
-                          item-text="name"
-                          item-value="id"
-                          return-object
-                        ></v-select>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field v-model="editedItem.price" label="Giá" />
-                      </v-col>
-                      <v-col cols="12">
                         <v-text-field
-                          v-model="editedItem.amount"
-                          label="Số lượng"
+                          v-model="editedItem.name"
+                          label="Họ và tên"
                         />
                       </v-col>
                       <v-col cols="12">
-                        <v-text-field
-                          v-model="editedItem.page_number"
-                          label="Số trang"
-                        />
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          v-model="editedItem.category"
-                          label="Thể loại"
-                        />
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          v-model="editedItem.publishing_year"
-                          label="Ngày xuất bản"
-                        />
-                      </v-col>
-                      <!-- <v-col cols="12">
                         <v-select
-                          :items="statusList"
-                          v-model="editedItem.status"
-                          label="Trạng thái"
+                          :items="classList"
+                          v-model="editedItem.class_id"
+                          label="Lớp"
                           item-text="name"
-                          item-value="code"
+                          item-value="id"
                         ></v-select>
-                      </v-col> -->
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          v-model="editedItem.address"
+                          label="Địa chỉ"
+                        />
+                      </v-col>
+                      <v-col cols="12">
+                        <v-select
+                          :items="gender"
+                          v-model="editedItem.gender"
+                          label="Giới tính"
+                          item-text="name"
+                          item-value="value"
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          v-model="editedItem.birthday"
+                          label="Ngày sinh"
+                          placeholder="12/04/1999"
+                        />
+                      </v-col>
                     </v-row>
                     <v-alert type="warning" dense border="left" v-if="error">
                       {{ error }}
@@ -175,54 +133,39 @@ export default {
     dialogDelete: false,
     headers: [
       {
-        text: "Tên",
+        text: "Họ và tên",
         align: "start",
         sortable: false,
         value: "name",
       },
-      // { text: "Mã", value: "id" },
-      { text: "Tác giả", value: "author.name" },
-      { text: "Ngôn ngữ", value: "language.name" },
-      { text: "NXB", value: "publisher.name" },
-      { text: "Lĩnh vực", value: "field.name" },
-      { text: "Giá", value: "price" },
-      { text: "Số lượng", value: "amount" },
-      { text: "Số trang", value: "page_number" },
-      { text: "Thể loại", value: "category" },
-      { text: "Phát hành", value: "publishing_year" },
+      { text: "Tên lớp", value: "classroom" },
+      { text: "Địa chỉ", value: "address" },
+      { text: "Giới tính", value: "sex" },
+      { text: "Ngày sinh", value: "birthday" },
       { text: "Hành động", value: "actions", sortable: false },
     ],
     desserts: [],
     editedIndex: -1,
     editedItem: {
       name: "",
-      author: "",
-      language: "",
-      publisher: "",
-      field: "",
-      publishing_year: "",
-      price: "",
-      page_number: "",
-      category: "",
-      amount: "",
+      class_id: "",
+      address: "",
+      gender: "",
+      birthday: "",
     },
     defaultItem: {
       name: "",
-      author: "",
-      language: "",
-      publisher: "",
-      field: "",
-      publishing_year: "",
-      price: "",
-      page_number: "",
-      category: "",
-      amount: "",
+      class_id: "",
+      address: "",
+      gender: "",
+      birthday: "",
     },
     error: "",
-    authorList: [],
-    languageList: [],
-    fieldList: [],
-    publisherList: [],
+    gender: [
+      { value: "male", name: "Nam" },
+      { value: "female", name: "Nữ" },
+    ],
+    classList: [],
   }),
 
   computed: {
@@ -241,26 +184,28 @@ export default {
   },
 
   mounted() {
-    this.getList();
-    this.CallAPI("get", "authors", {}, (response) => {
-      this.authorList = response.data;
-    });
-    this.CallAPI("get", "fields", {}, (response) => {
-      this.fieldList = response.data;
-    });
-    this.CallAPI("get", "publishers", {}, (response) => {
-      this.publisherList = response.data;
-    });
-    this.CallAPI("get", "languages", {}, (response) => {
-      this.languageList = response.data;
+    this.getUserList();
+    this.CallAPI("get", "classrooms", {}, (response) => {
+      this.classList = response.data;
     });
   },
 
   methods: {
-    getList() {
+    getUserList() {
       this.desserts = [];
-      this.CallAPI("get", "documents", {}, (response) => {
-        this.desserts = response.data
+      this.CallAPI("get", "students", {}, (response) => {
+        for (let item of response.data) {
+          this.desserts.push({
+            id: item.id,
+            name: item.name,
+            class_id: item.class_id,
+            classroom: item.classroom.name,
+            address: item.address,
+            gender: item.gender,
+            birthday: this.formatDate(item.birthday),
+            sex: item.gender == "female" ? "Nữ" : "Nam",
+          });
+        }
       });
     },
 
@@ -288,14 +233,14 @@ export default {
       this.closeDelete();
       this.CallAPI(
         "delete",
-        "documents/" + this.desserts[this.editedIndex].id,
+        "students/" + this.desserts[this.editedIndex].id,
         {},
         (response) => {
           this.$toast.success("Xóa thành công");
-          this.getList();
+          this.getUserList();
         },
         (error) => {
-          console.log(error.response.data);
+          this.$toast.error("Lỗi: " + error.response.data);
         }
       );
     },
@@ -320,49 +265,66 @@ export default {
     save() {
       let data = {
         name: this.editedItem.name,
-        author_id: this.editedItem.author.id,
-        language_id: this.editedItem.language.id,
-        publisher_id: this.editedItem.publisher.id,
-        field_id: this.editedItem.field.id,
-        publishing_year: this.formatDate2(this.editedItem.publishing_year),
-        price: Number(this.editedItem.price),
-        page_number: Number(this.editedItem.page_number),
-        category: this.editedItem.category,
-        amount: this.editedItem.amount,
+        class_id: this.editedItem.class_id,
+        address: this.editedItem.address,
+        gender: this.editedItem.gender,
+        birthday: this.formatDate2(this.editedItem.birthday),
       };
-      if (!this.editedItem.name) {
+      if (
+        !this.editedItem.name ||
+        !this.editedItem.class_id ||
+        !this.editedItem.address ||
+        !this.editedItem.gender ||
+        !this.editedItem.birthday
+      ) {
         this.error = "Vui lòng nhập đủ thông tin";
+        return;
+      }
+      if (!this.validDate(this.editedItem.birthday)) {
+        this.error = "Ngày sinh không đúng định dạng";
         return;
       }
       if (this.editedIndex > -1) {
         this.CallAPI(
           "put",
-          "documents/" + this.desserts[this.editedIndex].id,
+          "students/" + this.desserts[this.editedIndex].id,
           data,
           (response) => {
             this.$toast.success("Sửa thành công");
-            this.getList();
+            this.getUserList();
             this.close();
           },
           (error) => {
-            this.error = "Lỗi: " + error.response.data;
+            this.error = "Mã sinh viên đã tồn tại";
           }
         );
       } else {
         this.CallAPI(
           "post",
-          "documents",
+          "students",
           data,
           (response) => {
             this.$toast.success("Thêm thành công");
-            this.getList();
+            this.getUserList();
             this.close();
           },
           (error) => {
-            this.error = "Lỗi: " + error.response.data;
+            this.error = "Mã sinh viên đã tồn tại";
           }
         );
       }
+    },
+    validEmail(email) {
+      const reg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return reg.test(email);
+    },
+    validPhone(phone) {
+      const reg = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+      return reg.test(phone);
+    },
+    validDate(date) {
+      const reg = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+      return reg.test(date);
     },
   },
 };

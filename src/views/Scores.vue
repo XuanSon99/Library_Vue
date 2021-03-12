@@ -3,8 +3,8 @@
     <base-material-card
       color="success"
       dark
-      icon="mdi-account-heart-outline"
-      title="Độc giả"
+      icon="mdi-bookmark-plus"
+      title="Kết quả học tập"
       class="px-5 py-3"
     >
       <!-- update: sort-desc -->
@@ -45,44 +45,60 @@
                   <v-container>
                     <v-row>
                       <v-col cols="12">
-                        <v-text-field
-                          v-model="editedItem.name"
-                          label="Họ và tên"
-                        />
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          v-model="editedItem.student_code"
-                          label="Mã sinh viên"
-                        />
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          v-model="editedItem.email"
-                          label="Email"
-                        />
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          v-model="editedItem.phone"
-                          label="Số điện thoại"
-                        />
-                      </v-col>
-                      <v-col cols="12">
                         <v-select
-                          :items="gender"
-                          v-model="editedItem.gender"
-                          label="Giới tính"
+                          :items="studentList"
+                          v-model="editedItem.student_id"
+                          label="Học sinh"
                           item-text="name"
-                          item-value="value"
+                          item-value="id"
                         ></v-select>
                       </v-col>
                       <v-col cols="12">
-                        <v-text-field
-                          v-model="editedItem.birthday"
-                          label="Ngày sinh"
-                          placeholder="12/04/1999"
-                        />
+                        <v-select
+                          :items="subjectList"
+                          v-model="editedItem.subject_id"
+                          label="Môn học"
+                          item-text="name"
+                          item-value="id"
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-select
+                          :items="scoreList"
+                          v-model="editedItem.type_score"
+                          label="Loại điểm"
+                          item-text="name"
+                          item-value="id"
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-select
+                          :items="teacherList"
+                          v-model="editedItem.teacher_id"
+                          label="Giáo viên"
+                          item-text="name"
+                          item-value="id"
+                        ></v-select> </v-col
+                      ><v-col cols="12">
+                        <v-select
+                          :items="classList"
+                          v-model="editedItem.class_id"
+                          label="Lớp học"
+                          item-text="name"
+                          item-value="id"
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-select
+                          :items="gradeList"
+                          v-model="editedItem.grade_level"
+                          label="Khối"
+                          item-text="name"
+                          item-value="id"
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field v-model="editedItem.score" label="Điểm" />
                       </v-col>
                     </v-row>
                     <v-alert type="warning" dense border="left" v-if="error">
@@ -136,41 +152,46 @@ export default {
     dialogDelete: false,
     headers: [
       {
-        text: "Họ và tên",
+        text: "Học sinh",
         align: "start",
         sortable: false,
-        value: "name",
+        value: "student.name",
       },
-      { text: "Mã SV", value: "student_code" },
-      { text: "Email", value: "email" },
-      { text: "SĐT", value: "phone" },
-      { text: "Giới tính", value: "sex" },
-      { text: "Ngày sinh", value: "birthday" },
+      { text: "Lớp", value: "classroom.name" },
+      { text: "Giáo viên", value: "teacher.name" },
+      { text: "Môn học", value: "subject.name" },
+      { text: "Loại điểm", value: "typescore.name" },
+      { text: "Khối", value: "gradelevel.name" },
+      { text: "Điểm", value: "score" },
       { text: "Hành động", value: "actions", sortable: false },
     ],
     desserts: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
-      email: "",
-      student_code: "",
-      phone: "",
-      gender: "",
-      birthday: "",
+      student_id: "",
+      teacher_id: "",
+      subject_id: "",
+      type_score: "",
+      class_id: "",
+      grade_level: "",
+      score: "",
     },
     defaultItem: {
-      name: "",
-      email: "",
-      student_code: "",
-      phone: "",
-      gender: "",
-      birthday: "",
+      student_id: "",
+      teacher_id: "",
+      subject_id: "",
+      type_score: "",
+      class_id: "",
+      grade_level: "",
+      score: "",
     },
     error: "",
-    gender: [
-      { value: "male", name: "Nam" },
-      { value: "female", name: "Nữ" },
-    ],
+    teacherList: [],
+    studentList: [],
+    subjectList: [],
+    scoreList: [],
+    classList: [],
+    gradeList: [],
   }),
 
   computed: {
@@ -189,26 +210,32 @@ export default {
   },
 
   mounted() {
-    this.getUserList();
+    this.getList();
+    this.CallAPI("get", "teachers", {}, (response) => {
+      this.teacherList = response.data;
+    });
+    this.CallAPI("get", "students", {}, (response) => {
+      this.studentList = response.data;
+    });
+    this.CallAPI("get", "subjects", {}, (response) => {
+      this.subjectList = response.data;
+    });
+    this.CallAPI("get", "type-mark", {}, (response) => {
+      this.scoreList = response.data;
+    });
+    this.CallAPI("get", "classrooms", {}, (response) => {
+      this.classList = response.data;
+    });
+    this.CallAPI("get", "grade-level", {}, (response) => {
+      this.gradeList = response.data;
+    });
   },
 
   methods: {
-    getUserList() {
+    getList() {
       this.desserts = [];
-      this.CallAPI("get", "readers", {}, (response) => {
-        console.log(response.data);
-        for (let item of response.data) {
-          this.desserts.push({
-            id: item.id,
-            name: item.name,
-            email: item.email,
-            student_code: item.student_code,
-            phone: item.phone,
-            gender: item.gender,
-            birthday: this.formatDate(item.birthday),
-            sex: item.gender == "female" ? "Nữ" : "Nam",
-          });
-        }
+      this.CallAPI("get", "scores", {}, (response) => {
+        this.desserts = response.data;
       });
     },
 
@@ -236,14 +263,14 @@ export default {
       this.closeDelete();
       this.CallAPI(
         "delete",
-        "readers/" + this.desserts[this.editedIndex].id,
+        "scores/" + this.desserts[this.editedIndex].id,
         {},
         (response) => {
           this.$toast.success("Xóa thành công");
-          this.getUserList();
+          this.getList();
         },
         (error) => {
-          this.$toast.error("Lỗi: " + error.response.data);
+          console.log(error.response.data);
         }
       );
     },
@@ -266,78 +293,51 @@ export default {
     },
 
     save() {
-      let data = {
-        name: this.editedItem.name,
-        email: this.editedItem.email,
-        student_code: this.editedItem.student_code,
-        phone: this.editedItem.phone,
-        gender: this.editedItem.gender,
-        birthday: this.formatDate2(this.editedItem.birthday),
-      };
       if (
-        !this.editedItem.name ||
-        !this.editedItem.email ||
-        !this.editedItem.phone ||
-        !this.editedItem.student_code ||
-        !this.editedItem.phone ||
-        !this.editedItem.birthday
+        !this.editedItem.student_id ||
+        !this.editedItem.teacher_id ||
+        !this.editedItem.subject_id ||
+        !this.editedItem.type_score ||
+        !this.editedItem.class_id ||
+        !this.editedItem.grade_level ||
+        !this.editedItem.score
       ) {
         this.error = "Vui lòng nhập đủ thông tin";
         return;
       }
-      if (!this.validEmail(this.editedItem.email)) {
-        this.error = "Email không đúng định dạng";
-        return;
-      }
-      if (!this.validPhone(this.editedItem.phone)) {
-        this.error = "Số điện thoại không đúng";
-        return;
-      }
-      if (!this.validDate(this.editedItem.birthday)) {
-        this.error = "Ngày sinh không đúng định dạng";
+      if (this.editedItem.score < 0 || this.editedItem.score > 10) {
+        this.error = "Điểm không hợp lệ";
         return;
       }
       if (this.editedIndex > -1) {
         this.CallAPI(
           "put",
-          "readers/" + this.desserts[this.editedIndex].id,
-          data,
+          "scores/" + this.desserts[this.editedIndex].id,
+          this.editedItem,
           (response) => {
             this.$toast.success("Sửa thành công");
-            this.getUserList();
+            this.getList();
             this.close();
           },
           (error) => {
-            this.error = "Mã sinh viên đã tồn tại";
+            this.error = "Lỗi: " + error.response.data;
           }
         );
       } else {
         this.CallAPI(
           "post",
-          "readers",
-          data,
+          "scores",
+          this.editedItem,
           (response) => {
             this.$toast.success("Thêm thành công");
-            this.getUserList();
+            this.getList();
             this.close();
           },
           (error) => {
-            this.error = "Mã sinh viên đã tồn tại";
+            this.error = "Lỗi: " + error.response.data;
           }
         );
       }
-    },
-    validEmail(email) {
-      const reg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return reg.test(email);
-    },
-    validPhone(phone) {
-      const reg = /((09|03|07|08|05)+([0-9]{8})\b)/g;
-      return reg.test(phone);
-    },
-    validDate(date) {
-      const reg = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
-      return reg.test(date);
     },
   },
 };

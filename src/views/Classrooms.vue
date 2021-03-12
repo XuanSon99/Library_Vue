@@ -3,8 +3,8 @@
     <base-material-card
       color="success"
       dark
-      icon="mdi-translate"
-      title="Ngôn ngữ"
+      icon="mdi-bookshelf"
+      title="Lớp học"
       class="px-5 py-3"
     >
       <!-- update: sort-desc -->
@@ -47,11 +47,23 @@
                       <v-col cols="12">
                         <v-text-field
                           v-model="editedItem.name"
-                          label="Ngôn ngữ"
+                          label="Tên lớp"
                         />
                       </v-col>
                       <v-col cols="12">
-                        <v-text-field v-model="editedItem.note" label="Mô tả" />
+                        <v-select
+                          :items="teacherList"
+                          v-model="editedItem.teacher_id"
+                          label="Giáo viên"
+                          item-text="name"
+                          item-value="id"
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          v-model="editedItem.member"
+                          label="Số lượng học sinh"
+                        />
                       </v-col>
                     </v-row>
                     <v-alert type="warning" dense border="left" v-if="error">
@@ -105,27 +117,30 @@ export default {
     dialogDelete: false,
     headers: [
       {
-        text: "Ngôn ngữ",
+        text: "Tên lớp",
         align: "start",
         sortable: false,
         value: "name",
       },
-      { text: "Mã ngôn ngữ", value: "id" },
-      { text: "Mô tả", value: "note" },
+      { text: "Giáo viên", value: "teacher.name" },
+      { text: "Số lượng học sinh", value: "member" },
       { text: "Hành động", value: "actions", sortable: false },
     ],
     desserts: [],
     editedIndex: -1,
     editedItem: {
       name: "",
-      note: "",
+      teacher_id: "",
+      member: "",
     },
     defaultItem: {
       name: "",
-      note: "",
+      teacher_id: "",
+      member: "",
     },
     show: false,
     error: "",
+    teacherList: [],
   }),
 
   computed: {
@@ -145,12 +160,15 @@ export default {
 
   mounted() {
     this.getList();
+    this.CallAPI("get", "teachers", {}, (response) => {
+      this.teacherList = response.data;
+    });
   },
 
   methods: {
     getList() {
       this.desserts = [];
-      this.CallAPI("get", "languages", {}, (response) => {
+      this.CallAPI("get", "classrooms", {}, (response) => {
         this.desserts = response.data;
       });
     },
@@ -175,7 +193,7 @@ export default {
       this.closeDelete();
       this.CallAPI(
         "delete",
-        "languages/" + this.desserts[this.editedIndex].id,
+        "classrooms/" + this.desserts[this.editedIndex].id,
         {},
         (response) => {
           this.$toast.success("Xóa thành công");
@@ -208,7 +226,8 @@ export default {
     save() {
       if (
         !this.editedItem.name ||
-        !this.editedItem.note
+        !this.editedItem.member ||
+        !this.editedItem.teacher_id
       ) {
         this.error = "Vui lòng nhập đủ thông tin";
         return;
@@ -216,7 +235,7 @@ export default {
       if (this.editedIndex > -1) {
         this.CallAPI(
           "put",
-          "languages/" + this.desserts[this.editedIndex].id,
+          "classrooms/" + this.desserts[this.editedIndex].id,
           this.editedItem,
           (response) => {
             this.$toast.success("Sửa thành công");
@@ -224,13 +243,13 @@ export default {
             this.close();
           },
           (error) => {
-            this.error = "Mã ngôn ngữ đã tồn tại";
+            this.error = "Mã lĩnh vực đã tồn tại";
           }
         );
       } else {
         this.CallAPI(
           "post",
-          "languages",
+          "classrooms",
           this.editedItem,
           (response) => {
             this.$toast.success("Thêm thành công");
@@ -238,7 +257,7 @@ export default {
             this.close();
           },
           (error) => {
-            this.error = "Mã ngôn ngữ đã tồn tại";
+            this.error = "Mã lĩnh vực đã tồn tại";
           }
         );
       }
