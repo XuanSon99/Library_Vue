@@ -10,6 +10,7 @@
     app
     width="260"
     v-bind="$attrs"
+    v-if="$route.meta.show"
   >
     <template v-slot:img="props">
       <v-img :gradient="`to bottom, ${barColor}`" v-bind="props" />
@@ -154,6 +155,11 @@ export default {
         icon: "mdi-account-supervisor",
         to: "/users",
       },
+      // {
+      //   title: "Tài khoản",
+      //   icon: "mdi-account-supervisor",
+      //   to: "/login",
+      // },
     ],
   }),
 

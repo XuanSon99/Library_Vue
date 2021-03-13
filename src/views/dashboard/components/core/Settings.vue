@@ -1,5 +1,5 @@
 <template>
-  <div id="settings-wrapper">
+  <div id="settings-wrapper" v-if="$route.meta.show">
     <v-card
       id="settings"
       class="py-2 px-4"
